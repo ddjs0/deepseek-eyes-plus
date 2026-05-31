@@ -88,6 +88,7 @@ deepseek-eyes (Python MCP Server)
 ## Credits
 
 Forked from [Capetlevrai/clipboard-vision-mcp](https://github.com/Capetlevrai/clipboard-vision-mcp) (MIT). Vision backend replaced with Qwen-VL via ModelScope. Full Chinese localization added.
+👍
 
 ## License
 
