@@ -4,7 +4,7 @@
       "type": "local",
       "command": ["C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
       "environment": {
-        "MODELSCOPE_API_KEY": "your_key_here"
+        "VISION_API_KEY": "your_key_here"
       },
       "enabled": true
     }

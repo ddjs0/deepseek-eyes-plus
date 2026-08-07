@@ -1,4 +1,4 @@
-# 故障排查 / Troubleshooting
+﻿# 故障排查 / Troubleshooting
 
 ## 剪贴板问题
 
@@ -21,11 +21,11 @@ sudo apt install xclip
 
 ## API Key 问题
 
-**"MODELSCOPE_API_KEY is not set"**
+**"VISION_API_KEY not set"**
 
-1. 访问 https://modelscope.cn 注册/登录
-2. 个人中心 → 访问令牌 → 创建令牌
-3. 确保 MCP 配置中的 `env` 块包含 `MODELSCOPE_API_KEY`
+1. 默认平台 ModelScope：访问 https://modelscope.cn 注册/登录 → 个人中心 → 访问令牌 → 创建令牌（key 的 ms- 前缀自动去除）
+2. 其他平台（小米 mimo / 智谱 / OpenAI / Claude）的 key 获取见 docs/VISION_MODELS.md
+3. 确保 MCP 配置中的 `env` 块包含 `VISION_API_KEY`（旧名 `MODELSCOPE_API_KEY` 也可）
 4. **完全重启** MCP 客户端（不是重载，是退出再打开）
 
 ## MCP 工具不出现
@@ -40,9 +40,9 @@ sudo apt install xclip
 
 **"Connection refused / timeout"**
 
-- ModelScope API 地址：`https://api-inference.modelscope.cn/v1`
-- 确认网络能访问（不需要翻墙）
-- 500 次/天的免费额度是否用完？等第二天重置
+- 默认 ModelScope API 地址：`https://api-inference.modelscope.cn/v1`（换平台则看 VISION_API_BASE 是否填对）
+- 确认网络能访问（ModelScope 国内直连，OpenAI/Claude 等海外平台需代理）
+- 默认 500 次/天的免费额度是否用完？等第二天重置
 
 **返回的图片描述质量不好**
 

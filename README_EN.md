@@ -16,19 +16,20 @@ source .venv/bin/activate  # macOS/Linux
 # .venv\Scripts\activate   # Windows
 pip install -e .
 
-# Get a free API key (2000 calls/day, 500 per model):
+# Get an API key for the vision model platform (default ModelScope, free, 500 calls/day):
 # ① https://modelscope.cn → Register/Login
 # ② Avatar → Profile → Access Token
 #    or directly: https://modelscope.cn/my/myaccesstoken
 # ③ First time: bind your Alibaba Cloud account (required)
 # ④ "Create Access Token" → name it → generate → copy
-# ⑤ Token format: ms-xxxxxxxxxxxx → remove the ms- prefix!
+# ⑤ Token format: ms-xxxxxxxxxxxx → the ms- prefix is stripped automatically, paste as-is
+# Other platforms (Xiaomi MiMo / Zhipu / OpenAI / Claude): see docs/VISION_MODELS.md
 
 ## Why?
 
 Text-only models like **DeepSeek V4** and **GLM 5.1** have no vision capability. Paste a screenshot and they can't see it.
 
-**deepseek-eyes** bridges this gap — an MCP server that reads your clipboard image, sends it to Qwen-VL (a powerful vision model via ModelScope), and returns a text description your LLM can reason about.
+**deepseek-eyes** bridges this gap — an MCP server that reads your clipboard image, sends it to a vision model (default Qwen-VL via ModelScope, or any OpenAI-compatible endpoint), and returns a text description your LLM can reason about.
 
 ## How It Works
 
@@ -40,7 +41,7 @@ deepseek-eyes (Python MCP Server)
         │
         ├── reads system clipboard (PIL)
         ├── encodes image as base64
-        ├── sends to Qwen-VL via ModelScope API
+        ├── sends to vision model via OpenAI-compatible API (default ModelScope)
         ├── returns text description
         └── deletes temp file
 ```
@@ -74,13 +75,16 @@ deepseek-eyes (Python MCP Server)
     "deepseek-eyes": {
       "command": "ABSOLUTE_PATH\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe",
       "args": ["-m", "deepseek_eyes"],
-      "env": { "MODELSCOPE_API_KEY": "your_key" }
+      "env": { "VISION_API_KEY": "your_key" }
     }
   }
 }
 ```
 
-> 💡 Optional env vars: `VISION_MODEL` (default `Qwen/Qwen3-VL-8B-Instruct`), `VISION_API_BASE` (default ModelScope; point it at any OpenAI-compatible endpoint, e.g. Xiaomi MiMo `https://api.xiaomimimo.com/v1` with `VISION_MODEL=mimo-v2.5` for audio/video understanding).
+> 💡 Env vars (via the client's `env` block):
+> - `VISION_API_KEY` (required): API key of the vision model platform. ModelScope's `ms-` prefix is stripped automatically; the old name `MODELSCOPE_API_KEY` still works.
+> - `VISION_MODEL` (optional, default `Qwen/Qwen3-VL-8B-Instruct`), `VISION_API_BASE` (optional, default ModelScope; point it at any OpenAI-compatible endpoint, e.g. Xiaomi MiMo `https://api.xiaomimimo.com/v1` with `VISION_MODEL=mimo-v2.5` for audio/video understanding).
+> - Full per-platform specs (Xiaomi MiMo / Zhipu / OpenAI / Claude): see [docs/VISION_MODELS.md](docs/VISION_MODELS.md)
 
 **Codex CLI / ChatGPT Desktop** (`~/.codex/config.toml`):
 
@@ -88,10 +92,10 @@ deepseek-eyes (Python MCP Server)
 [mcp_servers.deepseek-eyes]
 command = 'C:\path\to\deepseek-eyes\.venv\Scripts\python.exe'
 args = ["-m", "deepseek_eyes"]
-env = { "MODELSCOPE_API_KEY" = "your_key" }
+env = { "VISION_API_KEY" = "your_key" }
 ```
 
-Or add it with one command: `codex mcp add deepseek-eyes --env MODELSCOPE_API_KEY=your_key -- C:\path\to\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes`
+Or add it with one command: `codex mcp add deepseek-eyes --env VISION_API_KEY=your_key -- C:\path\to\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes`
 
 ## Security
 
@@ -102,7 +106,7 @@ Or add it with one command: `codex mcp add deepseek-eyes --env MODELSCOPE_API_KE
 
 ## Credits
 
-Forked from [Capetlevrai/clipboard-vision-mcp](https://github.com/Capetlevrai/clipboard-vision-mcp) (MIT). Vision backend replaced with Qwen-VL via ModelScope. Full Chinese localization added.
+Forked from [Capetlevrai/clipboard-vision-mcp](https://github.com/Capetlevrai/clipboard-vision-mcp) (MIT). Vision backend: default Qwen-VL via ModelScope, switchable to any OpenAI-compatible vision API (see [docs/VISION_MODELS.md](docs/VISION_MODELS.md)). Full Chinese localization added.
 👍
 
 ## License

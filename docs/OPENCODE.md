@@ -1,4 +1,4 @@
-# Opencode 配置指南
+﻿# Opencode 配置指南
 
 ## 安装
 
@@ -10,9 +10,9 @@ python -m venv .venv
 pip install -e .
 ```
 
-## 获取 ModelScope API Key
+## 获取视觉模型 API Key（默认 ModelScope）
 
-访问 https://modelscope.cn → 登录 → 个人中心 → 访问令牌 → 创建令牌（免费，每天500次）
+默认平台 ModelScope：访问 https://modelscope.cn → 登录 → 个人中心 → 访问令牌 → 创建令牌（免费，每天500次；key 的 ms- 前缀自动去除）。其他平台（小米 mimo / 智谱 / OpenAI / Claude）的 key 获取方式见 docs/VISION_MODELS.md。
 
 ## 配置 Opencode
 
@@ -26,7 +26,7 @@ pip install -e .
       "command": ["C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
       "enabled": true,
       "environment": {
-        "MODELSCOPE_API_KEY": "your_key_here"
+        "VISION_API_KEY": "your_key_here"
       }
     }
   }

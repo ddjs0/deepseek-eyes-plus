@@ -1,7 +1,7 @@
 """deepseek-eyes MCP Server — 给 DeepSeek 装上眼睛
 
-通过通义千问VL (Qwen-VL via ModelScope) 为无视觉能力的文本模型
-提供图片理解能力。支持剪贴板直接读取和文件路径两种方式。
+通过任意 OpenAI 兼容视觉 API（默认 Qwen-VL via ModelScope）为无视觉能力的
+文本模型提供图片理解能力。支持剪贴板直接读取和文件路径两种方式。
 
 Tools: clipboard-first (analyze_clipboard, extract_text_from_clipboard, ...)
        file-path (analyze_image, extract_text, ...)
@@ -26,10 +26,29 @@ from .clipboard import ClipboardError, save_clipboard_image
 SERVER_NAME = "deepseek-eyes"
 SERVER_VERSION = "1.1.0"
 
-# ModelScope API 配置
-MODELSCOPE_BASE_URL = os.environ.get("VISION_API_BASE", "https://api-inference.modelscope.cn/v1")
+# OpenAI 兼容 API 配置（VISION_MODEL / VISION_API_BASE / VISION_API_KEY）
+VISION_API_BASE = (
+    os.environ.get("VISION_API_BASE")
+    or os.environ.get("MODELSCOPE_BASE_URL")  # 旧名兼容
+    or "https://api-inference.modelscope.cn/v1"
+)
 DEFAULT_MODEL = "Qwen/Qwen3-VL-8B-Instruct"
 VISION_MODEL = os.environ.get("VISION_MODEL", DEFAULT_MODEL)
+
+
+def _resolve_api_key() -> str | None:
+    """读取 API Key：优先 VISION_API_KEY，兼容旧名 MODELSCOPE_API_KEY。
+
+    ModelScope 的 key 以 ms- 开头；仅在走 ModelScope 端点（未自定义
+    VISION_API_BASE，或 base 含 modelscope）时自动去除前缀，避免误伤
+    其他平台的 key。
+    """
+    key = os.environ.get("VISION_API_KEY") or os.environ.get("MODELSCOPE_API_KEY")
+    if key and key.startswith("ms-"):
+        base = VISION_API_BASE or ""
+        if not base or "modelscope" in base.lower():
+            key = key[3:]
+    return key
 
 # 安全检查：图片 / 音频 / 视频 三类媒体
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"}
@@ -119,10 +138,10 @@ server = Server(SERVER_NAME)
 
 
 class VisionClient:
-    """通义千问VL 视觉客户端 (via ModelScope OpenAI-compatible API)"""
+    """OpenAI 兼容视觉客户端 (AsyncOpenAI)"""
 
     def __init__(self, api_key: str):
-        self.client = AsyncOpenAI(api_key=api_key, base_url=MODELSCOPE_BASE_URL)
+        self.client = AsyncOpenAI(api_key=api_key, base_url=VISION_API_BASE)
 
     async def analyze(self, media_path: str, prompt: str) -> str:
         p = _validate_media_path(media_path)
@@ -321,16 +340,14 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         return [
             TextContent(
                 type="text",
-                text="❌ 未设置 MODELSCOPE_API_KEY 环境变量。\n\n"
-                "获取免费 API Key（每天2000次，单模型500次）：\n"
-                "1. 打开 https://modelscope.cn/my/myaccesstoken\n"
-                "2. 登录 → 首次使用需绑定阿里云账号\n"
-                "3. 点击「新建访问令牌」→ 命名 → 生成 → 复制\n"
-                "4. ⚠️ 令牌格式为 ms-xxxxxxxx，使用时去掉 ms- 前缀！\n"
-                "5. 将去掉前缀后的 Key 设置到 MCP 配置的 env 中\n\n"
-                "MODELSCOPE_API_KEY not set. "
-                "Get a free key at https://modelscope.cn/my/myaccesstoken "
-                "(2000 calls/day, remove ms- prefix).",
+                text="❌ 未设置 VISION_API_KEY 环境变量（旧名 MODELSCOPE_API_KEY 仍兼容）。\n\n"
+                "在 MCP 配置的 env 中设置视觉模型平台的 API Key：\n"
+                "1. 默认 ModelScope（免费 500 次/天）：https://modelscope.cn/my/myaccesstoken\n"
+                "2. 其他平台（小米 mimo / 智谱 / OpenAI / Claude 等）见 docs/VISION_MODELS.md\n"
+                "3. ModelScope 的 ms- 前缀会自动去除，无需手动处理\n\n"
+                "VISION_API_KEY not set. "
+                "Set it in your MCP env (old name MODELSCOPE_API_KEY still works). "
+                "See docs/VISION_MODELS.md for platform-specific keys.",
             )
         ]
 
@@ -372,7 +389,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
 async def main() -> None:
     global vision_client
-    api_key = os.environ.get("MODELSCOPE_API_KEY")
+    api_key = _resolve_api_key()
     if api_key:
         vision_client = VisionClient(api_key)
 
