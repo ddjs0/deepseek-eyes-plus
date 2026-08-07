@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deepseek-eyes"
-version = "1.0.0"
-description = "给 DeepSeek 装上眼睛 — MCP Server + 通义千问VL, 剪贴板图片 → 视觉模型 → 文字描述 / Give DeepSeek the ability to see images via clipboard + Qwen-VL"
+version = "1.1.0"
+description = "给 DeepSeek 装上眼睛 — MCP Server + 通义千问VL, 剪贴板/文件媒体(图片/音频/视频) → 视觉模型 → 文字描述 / Give DeepSeek the ability to see via clipboard/file media (image/audio/video) + Qwen-VL"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
@@ -21,16 +21,16 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 dependencies = [
-  "mcp>=1.0.0",
+  "mcp>=1.0,<2.0",
   "openai>=1.0.0",
   "aiofiles>=23.0.0",
   "Pillow>=10.0.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/290298661-pixel/deepseek-eyes"
-Repository = "https://github.com/290298661-pixel/deepseek-eyes"
-Issues = "https://github.com/290298661-pixel/deepseek-eyes/issues"
+Homepage = "https://github.com/ddjs0/deepseek-eyes"
+Repository = "https://github.com/ddjs0/deepseek-eyes"
+Issues = "https://github.com/ddjs0/deepseek-eyes/issues"
 
 [project.scripts]
 deepseek-eyes = "deepseek_eyes.server:run"

@@ -9,7 +9,7 @@
 ## Quick Start
 
 ```bash
-git clone https://github.com/290298661-pixel/deepseek-eyes.git
+git clone https://github.com/ddjs0/deepseek-eyes.git
 cd deepseek-eyes
 python -m venv .venv
 source .venv/bin/activate  # macOS/Linux
@@ -61,6 +61,8 @@ deepseek-eyes (Python MCP Server)
 | `understand_diagram` | Interpret diagram/flowchart |
 | `analyze_chart` | Analyze data chart |
 | `code_from_screenshot` | Extract code from screenshot file |
+| `analyze_audio` | Analyze audio file (speech transcription / sound description) |
+| `analyze_video` | Analyze video file (visual + audio description) |
 
 ## Client Configuration
 
@@ -78,12 +80,25 @@ deepseek-eyes (Python MCP Server)
 }
 ```
 
+> 💡 Optional env vars: `VISION_MODEL` (default `Qwen/Qwen3-VL-8B-Instruct`), `VISION_API_BASE` (default ModelScope; point it at any OpenAI-compatible endpoint, e.g. Xiaomi MiMo `https://api.xiaomimimo.com/v1` with `VISION_MODEL=mimo-v2.5` for audio/video understanding).
+
+**Codex CLI / ChatGPT Desktop** (`~/.codex/config.toml`):
+
+```toml
+[mcp_servers.deepseek-eyes]
+command = 'D:\GitHub\deepseek-eyes\.venv\Scripts\python.exe'
+args = ["-m", "deepseek_eyes"]
+env = { "MODELSCOPE_API_KEY" = "your_key" }
+```
+
+Or add it with one command: `codex mcp add deepseek-eyes --env MODELSCOPE_API_KEY=your_key -- D:\GitHub\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes`
+
 ## Security
 
 - Runs as local stdio process — no network ports exposed
 - Clipboard temp files auto-deleted after analysis
-- Image-only allowlist prevents arbitrary file reads
-- 20 MB size limit, magic-byte validation
+- Media allowlist (image/audio/video) prevents arbitrary file reads
+- Size limits: 20 MB images, 100 MB audio/video; magic-byte validation
 
 ## Credits
 

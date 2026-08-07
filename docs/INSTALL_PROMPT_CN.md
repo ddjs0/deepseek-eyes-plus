@@ -13,7 +13,7 @@
 安装步骤：
 
 1. 克隆仓库：
-   git clone https://github.com/290298661-pixel/deepseek-eyes.git
+   git clone https://github.com/ddjs0/deepseek-eyes.git
    cd deepseek-eyes
 
 2. 创建虚拟环境并安装：
@@ -66,7 +66,7 @@ clipboard images and analyzing them with Qwen-VL via ModelScope.
 Installation steps:
 
 1. Clone the repo:
-   git clone https://github.com/290298661-pixel/deepseek-eyes.git
+   git clone https://github.com/ddjs0/deepseek-eyes.git
    cd deepseek-eyes
 
 2. Create venv and install:

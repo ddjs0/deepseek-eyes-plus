@@ -3,7 +3,7 @@
 ## 安装
 
 ```bash
-git clone https://github.com/290298661-pixel/deepseek-eyes.git
+git clone https://github.com/ddjs0/deepseek-eyes.git
 cd deepseek-eyes
 python -m venv .venv
 .venv\Scripts\activate    # Windows

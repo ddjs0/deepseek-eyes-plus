@@ -24,16 +24,32 @@ from mcp.types import TextContent, Tool
 from .clipboard import ClipboardError, save_clipboard_image
 
 SERVER_NAME = "deepseek-eyes"
-SERVER_VERSION = "1.0.0"
+SERVER_VERSION = "1.1.0"
 
 # ModelScope API 配置
-MODELSCOPE_BASE_URL = "https://api-inference.modelscope.cn/v1"
+MODELSCOPE_BASE_URL = os.environ.get("VISION_API_BASE", "https://api-inference.modelscope.cn/v1")
 DEFAULT_MODEL = "Qwen/Qwen3-VL-8B-Instruct"
 VISION_MODEL = os.environ.get("VISION_MODEL", DEFAULT_MODEL)
 
-# 安全检查
-ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"}
+# 安全检查：图片 / 音频 / 视频 三类媒体
+IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp"}
+AUDIO_EXTENSIONS = {".mp3", ".flac", ".m4a", ".wav", ".ogg"}
+VIDEO_EXTENSIONS = {".mp4", ".wmv", ".mov", ".avi"}
+ALLOWED_EXTENSIONS = IMAGE_EXTENSIONS | AUDIO_EXTENSIONS | VIDEO_EXTENSIONS
 MAX_IMAGE_BYTES = 20 * 1024 * 1024
+MAX_MEDIA_BYTES = 100 * 1024 * 1024
+MIME_BY_EXT = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".webp": "image/webp",
+    ".bmp": "image/bmp",
+    ".mp4": "video/mp4",
+    ".mov": "video/quicktime",
+    ".avi": "video/x-msvideo",
+    ".wmv": "video/x-ms-wmv",
+}
 IMAGE_MAGIC_PREFIXES = (
     b"\x89PNG\r\n\x1a\n",
     b"\xff\xd8\xff",
@@ -44,26 +60,59 @@ IMAGE_MAGIC_PREFIXES = (
 )
 
 
-def _validate_image_path(path_str: str) -> Path:
-    """校验图片路径，拒绝非图片文件和超大文件。"""
+def _media_kind(p: Path) -> str:
+    """按扩展名判断媒体类别: image / audio / video。"""
+    ext = p.suffix.lower()
+    if ext in IMAGE_EXTENSIONS:
+        return "image"
+    if ext in AUDIO_EXTENSIONS:
+        return "audio"
+    if ext in VIDEO_EXTENSIONS:
+        return "video"
+    raise ValueError(f"不支持的媒体格式: {ext}")
+
+
+def _validate_media_path(path_str: str) -> Path:
+    """校验媒体路径，拒绝不支持的类型和超大文件。"""
     p = Path(path_str).resolve()
     if not p.is_file():
         raise ValueError(f"不是一个文件: {path_str}")
-    if p.suffix.lower() not in ALLOWED_EXTENSIONS:
-        raise ValueError(
-            f"拒绝读取 '{p.suffix}' —— 仅允许图片格式 "
-            f"({', '.join(sorted(ALLOWED_EXTENSIONS))})。"
-        )
+    kind = _media_kind(p)
+    limit = MAX_IMAGE_BYTES if kind == "image" else MAX_MEDIA_BYTES
     size = p.stat().st_size
-    if size > MAX_IMAGE_BYTES:
-        raise ValueError(f"图片过大: {size} 字节 (最大 {MAX_IMAGE_BYTES})。")
+    if size > limit:
+        raise ValueError(f"文件过大: {size} 字节 (最大 {limit})。")
     return p
 
 
-def _validate_magic(data: bytes) -> None:
-    """校验文件魔数。"""
-    if not any(data.startswith(m) for m in IMAGE_MAGIC_PREFIXES):
-        raise ValueError("文件内容不像是支持的图片格式。")
+def _validate_magic(kind: str, ext: str, data: bytes) -> None:
+    """按媒体类别校验文件魔数。"""
+    if kind == "image":
+        if not any(data.startswith(m) for m in IMAGE_MAGIC_PREFIXES):
+            raise ValueError("文件内容不像是支持的图片格式。")
+        return
+    if kind == "audio":
+        ok = (
+            (ext == ".wav" and data[:4] == b"RIFF" and data[8:12] == b"WAVE")
+            or (ext == ".mp3" and (
+                data.startswith(b"ID3")
+                or data.startswith(b"\xff\xfb")
+                or data.startswith(b"\xff\xf3")
+            ))
+            or (ext == ".flac" and data.startswith(b"fLaC"))
+            or (ext == ".ogg" and data.startswith(b"OggS"))
+            or (ext == ".m4a" and data[4:8] == b"ftyp")
+        )
+        if not ok:
+            raise ValueError("文件内容不像是支持的音频格式。")
+        return
+    ok = (
+        (ext in (".mp4", ".mov") and data[4:8] == b"ftyp")
+        or (ext == ".avi" and data[:4] == b"RIFF" and data[8:12] == b"AVI")
+        or (ext == ".wmv" and data.startswith(b"\x30\x26\xb2\x75\x8e\x66\xcf\x11"))
+    )
+    if not ok:
+        raise ValueError("文件内容不像是支持的视频格式。")
 
 
 server = Server(SERVER_NAME)
@@ -75,25 +124,37 @@ class VisionClient:
     def __init__(self, api_key: str):
         self.client = AsyncOpenAI(api_key=api_key, base_url=MODELSCOPE_BASE_URL)
 
-    async def analyze(self, image_path: str, prompt: str) -> str:
-        p = _validate_image_path(image_path)
+    async def analyze(self, media_path: str, prompt: str) -> str:
+        p = _validate_media_path(media_path)
+        ext = p.suffix.lower()
+        kind = _media_kind(p)
         async with aiofiles.open(p, "rb") as f:
             data = await f.read()
-        _validate_magic(data)
+        _validate_magic(kind, ext, data)
         b64 = base64.b64encode(data).decode("utf-8")
+
+        if kind == "image":
+            media_part = {
+                "type": "image_url",
+                "image_url": {"url": f"data:{MIME_BY_EXT[ext]};base64,{b64}"},
+            }
+        elif kind == "audio":
+            media_part = {
+                "type": "input_audio",
+                "input_audio": {"data": b64, "format": ext.lstrip(".")},
+            }
+        else:  # video
+            media_part = {
+                "type": "video_url",
+                "video_url": {"url": f"data:{MIME_BY_EXT[ext]};base64,{b64}"},
+            }
 
         response = await self.client.chat.completions.create(
             model=VISION_MODEL,
             messages=[
                 {
                     "role": "user",
-                    "content": [
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": f"data:image/png;base64,{b64}"},
-                        },
-                        {"type": "text", "text": prompt},
-                    ],
+                    "content": [media_part, {"type": "text", "text": prompt}],
                 }
             ],
             temperature=0.3,
@@ -127,6 +188,14 @@ PROMPTS: dict[str, str] = {
     "code_from_screenshot": (
         "从这张截图中提取全部代码。返回：1) 编程语言 2) 格式化的代码块，保留缩进。"
     ),
+    "analyze_audio": (
+        "请分析这段音频：识别并转写其中的语音内容，描述背景声音、说话人语气等"
+        "对听不到音频的人有用的信息。"
+    ),
+    "analyze_video": (
+        "请分析这个视频：描述画面内容、场景变化、动作以及音频/语音内容，"
+        "给出对看不到视频的人有用的关键信息。"
+    ),
 }
 
 
@@ -143,6 +212,24 @@ def _image_tool(name: str, zh: str, en: str) -> Tool:
                 }
             },
             "required": ["image_path"],
+        },
+    )
+
+
+def _media_tool(name: str, zh: str, en: str) -> Tool:
+    return Tool(
+        name=name,
+        description=f"{zh} / {en}",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "media_path": {
+                    "type": "string",
+                    "description": "音频/视频文件的绝对路径 / Absolute path to the audio/video file.",
+                },
+                "prompt": {"type": "string", "description": "自定义问题 / Custom question."},
+            },
+            "required": ["media_path"],
         },
     )
 
@@ -203,6 +290,8 @@ async def list_tools() -> list[Tool]:
         _image_tool("understand_diagram", "解读流程图/架构图等图表", "Interpret a diagram image file"),
         _image_tool("analyze_chart", "分析数据图表中的趋势和洞察", "Analyze a chart image file"),
         _image_tool("code_from_screenshot", "从磁盘代码截图提取代码", "Extract code from a screenshot file"),
+        _media_tool("analyze_audio", "分析音频文件（语音转写/声音描述）", "Analyze an audio file"),
+        _media_tool("analyze_video", "分析视频文件（画面+声音描述）", "Analyze a video file"),
     ]
 
 
@@ -270,6 +359,10 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             text = await _run("analyze_chart", arguments["image_path"])
         elif name == "code_from_screenshot":
             text = await _run("code_from_screenshot", arguments["image_path"])
+        elif name == "analyze_audio":
+            text = await _run("analyze_audio", arguments["media_path"], arguments.get("prompt"))
+        elif name == "analyze_video":
+            text = await _run("analyze_video", arguments["media_path"], arguments.get("prompt"))
         else:
             text = f"未知工具: {name}"
         return [TextContent(type="text", text=text)]

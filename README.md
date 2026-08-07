@@ -26,7 +26,7 @@
 
 把下面的提示词**直接粘贴**给 Claude Code / DeepSeek / ChatGPT，AI 会自动帮你完成克隆、安装、配置全流程：
 
-> 请帮我安装 deepseek-eyes，仓库地址 [https://github.com/Shaohan-He/deepseek-eyes](https://github.com/Shaohan-He/deepseek-eyes) 。按 README 中的步骤：克隆 → 创建 venv → pip install -e . → 引导我获取 ModelScope API Key → 配置 MCP 客户端。
+> 请帮我安装 deepseek-eyes，仓库地址 [https://github.com/ddjs0/deepseek-eyes](https://github.com/ddjs0/deepseek-eyes) 。按 README 中的步骤：克隆 → 创建 venv → pip install -e . → 引导我获取 ModelScope API Key → 配置 MCP 客户端。
 
 [📋 完整安装提示词（中英文）](docs/INSTALL_PROMPT_CN.md)
 
@@ -36,7 +36,7 @@
 
 ```bash
 # 1. 克隆
-git clone https://github.com/Shaohan-He/deepseek-eyes.git
+git clone https://github.com/ddjs0/deepseek-eyes.git
 cd deepseek-eyes
 
 # 2. 安装
@@ -119,6 +119,8 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 | `understand_diagram` | 解读流程图/架构图 |
 | `analyze_chart` | 分析数据图表 |
 | `code_from_screenshot` | 磁盘代码截图提取代码 |
+| `analyze_audio` | 分析音频文件（语音转写/声音描述） |
+| `analyze_video` | 分析视频文件（画面+声音描述） |
 
 ### 🔌 客户端配置
 
@@ -139,6 +141,8 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 ```
 
 > ⚠️ `command` 必须使用 venv 中 Python 的**绝对路径**。
+>
+> 💡 可选环境变量：`VISION_MODEL`（默认 `Qwen/Qwen3-VL-8B-Instruct`）、`VISION_API_BASE`（默认 ModelScope；可指向任意 OpenAI 兼容端点，如小米 MiMo `https://api.xiaomimimo.com/v1` + `VISION_MODEL=mimo-v2.5` 获得音频/视频理解）
 
 **Opencode**（`%APPDATA%\opencode\opencode.json`）：
 
@@ -157,6 +161,17 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 }
 ```
 
+**Codex CLI / ChatGPT 桌面版**（`~/.codex/config.toml`）：
+
+```toml
+[mcp_servers.deepseek-eyes]
+command = 'D:\GitHub\deepseek-eyes\.venv\Scripts\python.exe'
+args = ["-m", "deepseek_eyes"]
+env = { "MODELSCOPE_API_KEY" = "你的_API_Key" }
+```
+
+或一行命令添加：`codex mcp add deepseek-eyes --env MODELSCOPE_API_KEY=你的_API_Key -- D:\GitHub\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes`
+
 ### ❓ 常见问题
 
 见 [故障排查指南](docs/TROUBLESHOOTING.md)
@@ -165,15 +180,15 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 
 - 本地 stdio 进程运行，不开放任何网络端口
 - 临时剪贴板文件分析完成后**自动删除**
-- 仅接受图片格式（`.png .jpg .jpeg .gif .webp .bmp`），防止 LLM 注入后读取任意文件
-- 文件大小限制 20MB，魔数校验
+- 仅接受媒体格式：图片（`.png .jpg .jpeg .gif .webp .bmp`）/ 音频（`.mp3 .flac .m4a .wav .ogg`）/ 视频（`.mp4 .wmv .mov .avi`），防止 LLM 注入后读取任意文件
+- 文件大小限制：图片 20MB、音频/视频 100MB，魔数校验
 - 图片经 base64 编码发送至 ModelScope API，参阅其[隐私政策](https://modelscope.cn/privacy)
 
 ### 🗺️ 路线图
 
 - [ ] 支持 DashScope（阿里云官方）作为备用后端
 - [ ] 多 API Key 轮询
-- [ ] 视频关键帧提取 + 分析
+- [x] 视频/音频理解（走全模态模型，如小米 MiMo mimo-v2.5，无需关键帧提取）
 
 ---
 

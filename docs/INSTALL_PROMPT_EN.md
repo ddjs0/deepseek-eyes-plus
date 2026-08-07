@@ -9,7 +9,7 @@ You are going to install and configure the `deepseek-eyes` MCP server on my mach
 so that I can paste screenshots in my MCP-capable coding client (Opencode, Claude Code,
 Cursor, Cline, Continue, ...) and have text-only models see them via Qwen-VL + ModelScope.
 
-Repository: https://github.com/290298661-pixel/deepseek-eyes
+Repository: https://github.com/ddjs0/deepseek-eyes
 
 Steps to follow:
 
