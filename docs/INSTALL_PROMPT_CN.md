@@ -39,10 +39,9 @@
    运行 python examples/smoke_test.py
    应该看到 "✅ 成功" 的输出
 
-5. 配置 Claude Code 的 MCP：
-   在项目的 .claude/settings.json 中添加，env 按第 0 步的选择填：
+5. **先 ask 我用的哪个 MCP 客户端**（多选/单选，列出常见选项：Claude Code / Opencode / Codex CLI 或 ChatGPT 桌面版 / Cursor / Cline / Continue / Reasonix / 其他），按对应客户端配置，不要默认 Claude Code。env 内容按第 0 步的选择填（见下方两个模板），command 用 venv 中 Python 的绝对路径。
 
-   - 选了 Qwen3-VL-8B：
+   - 选了 Qwen3-VL-8B（env 模板）：
    {
      "mcpServers": {
        "deepseek-eyes": {
@@ -55,7 +54,7 @@
      }
    }
 
-   - 选了 mimo-v2.5（多三个环境变量）：
+   - 选了 mimo-v2.5（env 模板，多三个环境变量）：
    {
      "mcpServers": {
        "deepseek-eyes": {
@@ -70,8 +69,16 @@
      }
    }
 
+   各客户端配置位置（env 都填上面模板的内容）：
+   - Claude Code：项目 `.claude/settings.json` 的 "mcpServers"（如上模板）
+   - Opencode：`%APPDATA%\opencode\opencode.json` 的 "mcp" 节点
+   - Codex CLI / ChatGPT 桌面版：`~/.codex/config.toml` 的 [mcp_servers.deepseek-eyes]
+   - Cursor / Cline / Continue：`.mcp.json` 或客户端设置里的 MCP Servers
+   - Reasonix：config.toml 的 [[plugins]]，env 写成
+     env = { MODELSCOPE_API_KEY = "…", VISION_MODEL = "…", VISION_API_BASE = "…" }
+   - 其他：按该客户端的 MCP 配置方式写入同样的 env
+
    注意：command 必须使用 venv 中 Python 的绝对路径！
-   如果你是 Reasonix/其他客户端，按对应客户端的 MCP 配置方式写入同样的 env。
 
 6. 重启客户端，然后测试：
    按 Win+Shift+S 截图，Ctrl+C 复制

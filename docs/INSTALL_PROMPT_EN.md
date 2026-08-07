@@ -38,9 +38,9 @@ Installation steps:
    Run: python examples/smoke_test.py
    Should see "✅ 成功" / "OK: clipboard image saved to..."
 
-5. Configure Claude Code MCP in .claude/settings.json (env depends on step 0):
+5. **First ask me which MCP client I'm using** (single/multi-select: Claude Code / Opencode / Codex CLI or ChatGPT Desktop / Cursor / Cline / Continue / Reasonix / Other), then configure for that client — do not default to Claude Code. env contents depend on step 0 (two templates below), command uses the venv Python absolute path.
 
-   - If Qwen3-VL-8B:
+   - If Qwen3-VL-8B (env template):
    {
      "mcpServers": {
        "deepseek-eyes": {
@@ -53,7 +53,7 @@ Installation steps:
      }
    }
 
-   - If mimo-v2.5 (three extra env vars):
+   - If mimo-v2.5 (env template, three extra env vars):
    {
      "mcpServers": {
        "deepseek-eyes": {
@@ -68,8 +68,16 @@ Installation steps:
      }
    }
 
+   Config locations per client (env = template above):
+   - Claude Code: project `.claude/settings.json` → "mcpServers" (as templates above)
+   - Opencode: `%APPDATA%\opencode\opencode.json` → "mcp" node
+   - Codex CLI / ChatGPT Desktop: `~/.codex/config.toml` → [mcp_servers.deepseek-eyes]
+   - Cursor / Cline / Continue: `.mcp.json` or the client's MCP Servers settings
+   - Reasonix: config.toml `[[plugins]]`, env =
+     env = { MODELSCOPE_API_KEY = "…", VISION_MODEL = "…", VISION_API_BASE = "…" }
+   - Other: write the same env into that client's MCP config
+
    Use the absolute path to the venv's Python!
-   For Reasonix/other clients, write the same env into that client's MCP config.
 
 6. Restart the client and test:
    Take a screenshot, copy it to clipboard
