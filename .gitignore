@@ -18,3 +18,5 @@ Thumbs.db
 .ruff_cache/
 
 .reasonix/
+
+tmp/

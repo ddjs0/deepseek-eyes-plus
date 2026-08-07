@@ -8,7 +8,7 @@
 {
   "mcpServers": {
     "deepseek-eyes": {
-      "command": "D:\\GitHub\\deepseek-eyes\\.venv\\Scripts\\python.exe",
+      "command": "C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe",
       "args": ["-m", "deepseek_eyes"],
       "env": {
         "MODELSCOPE_API_KEY": "your_key_here"
@@ -58,7 +58,7 @@ Codex 把 MCP 配置放在 `~/.codex/config.toml`（也可用项目级 `.codex/c
 
 ```toml
 [mcp_servers.deepseek-eyes]
-command = 'D:\GitHub\deepseek-eyes\.venv\Scripts\python.exe'
+command = 'C:\path\to\deepseek-eyes\.venv\Scripts\python.exe'
 args = ["-m", "deepseek_eyes"]
 env = { "MODELSCOPE_API_KEY" = "your_key_here" }
 ```
@@ -66,7 +66,7 @@ env = { "MODELSCOPE_API_KEY" = "your_key_here" }
 或用 CLI 命令快速添加（效果相同）：
 
 ```bash
-codex mcp add deepseek-eyes --env MODELSCOPE_API_KEY=your_key_here -- D:\GitHub\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes
+codex mcp add deepseek-eyes --env MODELSCOPE_API_KEY=your_key_here -- C:\path\to\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes
 ```
 
 > 💡 可选：

@@ -130,7 +130,7 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 {
   "mcpServers": {
     "deepseek-eyes": {
-      "command": "D:\\GitHub\\deepseek-eyes\\.venv\\Scripts\\python.exe",
+      "command": "C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe",
       "args": ["-m", "deepseek_eyes"],
       "env": {
         "MODELSCOPE_API_KEY": "你的_API_Key"
@@ -140,7 +140,9 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 }
 ```
 
-> ⚠️ `command` 必须使用 venv 中 Python 的**绝对路径**。
+> ⚠️ `command` 必须使用 venv 中 Python 的**绝对路径**（Windows 用 `\path\to\deepseek-eyes\.venv\Scripts\python.exe`，macOS/Linux 用 `/path/to/deepseek-eyes/.venv/bin/python`）。
+>
+> 🔑 环境变量通过**客户端配置的 `env` 块**传入（`.env.example` 只是参考文档，程序不读取 `.env` 文件）。
 >
 > 💡 可选环境变量：`VISION_MODEL`（默认 `Qwen/Qwen3-VL-8B-Instruct`）、`VISION_API_BASE`（默认 ModelScope；可指向任意 OpenAI 兼容端点，如小米 MiMo `https://api.xiaomimimo.com/v1` + `VISION_MODEL=mimo-v2.5` 获得音频/视频理解）
 
@@ -151,7 +153,7 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
   "mcp": {
     "deepseek-eyes": {
       "type": "local",
-      "command": ["D:\\GitHub\\deepseek-eyes\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
+      "command": ["C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
       "enabled": true,
       "environment": {
         "MODELSCOPE_API_KEY": "你的_API_Key"
@@ -165,12 +167,12 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 
 ```toml
 [mcp_servers.deepseek-eyes]
-command = 'D:\GitHub\deepseek-eyes\.venv\Scripts\python.exe'
+command = 'C:\path\to\deepseek-eyes\.venv\Scripts\python.exe'
 args = ["-m", "deepseek_eyes"]
 env = { "MODELSCOPE_API_KEY" = "你的_API_Key" }
 ```
 
-或一行命令添加：`codex mcp add deepseek-eyes --env MODELSCOPE_API_KEY=你的_API_Key -- D:\GitHub\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes`
+或一行命令添加：`codex mcp add deepseek-eyes --env MODELSCOPE_API_KEY=你的_API_Key -- C:\path\to\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes`
 
 ### ❓ 常见问题
 

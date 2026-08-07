@@ -23,7 +23,7 @@ pip install -e .
   "mcp": {
     "deepseek-eyes": {
       "type": "local",
-      "command": ["D:\\GitHub\\deepseek-eyes\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
+      "command": ["C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
       "enabled": true,
       "environment": {
         "MODELSCOPE_API_KEY": "your_key_here"

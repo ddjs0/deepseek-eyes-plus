@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "deepseek-eyes": {
-      "command": "D:\\GitHub\\deepseek-eyes\\.venv\\Scripts\\python.exe",
+      "command": "C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe",
       "args": ["-m", "deepseek_eyes"],
       "env": {
         "MODELSCOPE_API_KEY": "your_key_here"
