@@ -26,7 +26,7 @@
 
 把下面的提示词**直接粘贴**给 Claude Code / DeepSeek / ChatGPT，AI 会自动帮你完成克隆、安装、配置全流程：
 
-> 请帮我安装 deepseek-eyes，仓库地址 [https://github.com/ddjs0/deepseek-eyes](https://github.com/ddjs0/deepseek-eyes) 。按 README 中的步骤：克隆 → 创建 venv → pip install -e . → 引导我获取 ModelScope API Key → 配置 MCP 客户端。
+> 请帮我安装 deepseek-eyes，仓库地址 [https://github.com/ddjs0/deepseek-eyes](https://github.com/ddjs0/deepseek-eyes) 。按 README 中的步骤：克隆 → 创建 venv → pip install -e . → **先 ask 我选择视觉后端（Qwen3-VL-8B / mimo-v2.5）**，再按选择引导我获取对应的 API Key → 配置 MCP 客户端。
 
 [📋 完整安装提示词（中英文）](docs/INSTALL_PROMPT_CN.md)
 
