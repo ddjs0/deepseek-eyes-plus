@@ -1,4 +1,4 @@
-# deepseek-eyes 👁️
+# deepseek-eyes-plus 👁️
 
 <p align="center">
   <b>给 DeepSeek 装上眼睛（无需外网！）。</b><br>
@@ -26,7 +26,7 @@
 
 把下面的提示词**直接粘贴**给 Claude Code / DeepSeek / ChatGPT，AI 会自动帮你完成克隆、安装、配置全流程：
 
-> 请帮我安装 deepseek-eyes，仓库地址 [https://github.com/ddjs0/deepseek-eyes](https://github.com/ddjs0/deepseek-eyes) 。按 README 中的步骤：克隆 → 创建 venv → pip install -e . → **先读 docs/VISION_MODELS.md，再 ask 我选择视觉模型（默认 Qwen3-VL-8B / 可选 mimo-v2.5 等）**，按选择引导我获取对应的 API Key → 配置 MCP 客户端。
+> 请帮我安装 deepseek-eyes-plus，仓库地址 [https://github.com/ddjs0/deepseek-eyes-plus](https://github.com/ddjs0/deepseek-eyes-plus) 。按 README 中的步骤：克隆 → 创建 venv → pip install -e . → **先读 docs/VISION_MODELS.md，再 ask 我选择视觉模型（默认 Qwen3-VL-8B / 可选 mimo-v2.5 等）**，按选择引导我获取对应的 API Key → 配置 MCP 客户端。
 
 [📋 完整安装提示词（中英文）](docs/INSTALL_PROMPT_CN.md)
 
@@ -36,8 +36,8 @@
 
 ```bash
 # 1. 克隆
-git clone https://github.com/ddjs0/deepseek-eyes.git
-cd deepseek-eyes
+git clone https://github.com/ddjs0/deepseek-eyes-plus.git
+cd deepseek-eyes-plus
 
 # 2. 安装
 python -m venv .venv
@@ -65,14 +65,14 @@ python examples/smoke_test.py
 
 DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴一张截图，它只能告诉你"我看见了文件路径"。
 
-**deepseek-eyes** 填补了这个缺口：
+**deepseek-eyes-plus** 填补了这个缺口：
 
 ```
 你截了一张图
         │
         ▼
   ┌─────────────────┐
-  │ deepseek-eyes    │
+  │ deepseek-eyes-plus│
   │ 读取剪贴板图片    │
   │ → 发给视觉模型     │
   │ → 返回文字描述   │
@@ -83,7 +83,7 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 
 **和同类工具的对比：**
 
-| | deepseek-eyes | 原版 clipboard-vision-mcp | ErlichLiu/deepseek-vision |
+| | deepseek-eyes-plus | 原版 clipboard-vision-mcp | ErlichLiu/deepseek-vision |
 |---|---|---|---|
 | 视觉后端 | 通义千问VL（可换任意 OpenAI 兼容视觉 API） | Groq（需翻墙） | 自选 |
 | 免费额度 | 500次/天 | Groq 免费层 | 取决于后端 |
@@ -94,7 +94,7 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 
 ```
 ┌──────────────────┐   MCP    ┌──────────────────┐   HTTPS   ┌───────────────────┐
-│  Claude Code /    │ ──────▶ │  deepseek-eyes   │ ────────▶│  视觉模型 API       │
+│  Claude Code /    │ ──────▶ │ deepseek-eyes-plus│ ────────▶│  视觉模型 API       │
 │  Opencode         │         │  (Python)        │          │  默认 Qwen3-VL-8B   │
 │  (DeepSeek API)   │         │                  │          │  (可换 mimo 等)     │
 └──────────────────┘         └──────────────────┘          └───────────────────┘
@@ -131,7 +131,7 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 {
   "mcpServers": {
     "deepseek-eyes": {
-      "command": "C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe",
+      "command": "C:\\path\\to\\deepseek-eyes-plus\\.venv\\Scripts\\python.exe",
       "args": ["-m", "deepseek_eyes"],
       "env": {
         "VISION_API_KEY": "你的_API_Key"
@@ -141,7 +141,7 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 }
 ```
 
-> ⚠️ `command` 必须使用 venv 中 Python 的**绝对路径**（Windows 用 `\path\to\deepseek-eyes\.venv\Scripts\python.exe`，macOS/Linux 用 `/path/to/deepseek-eyes/.venv/bin/python`）。
+> ⚠️ `command` 必须使用 venv 中 Python 的**绝对路径**（Windows 用 `\path\to\deepseek-eyes-plus\.venv\Scripts\python.exe`，macOS/Linux 用 `/path/to/deepseek-eyes-plus/.venv/bin/python`）。
 >
 > 🔑 环境变量通过**客户端配置的 `env` 块**传入（`.env.example` 只是参考文档，程序不读取 `.env` 文件）。
 >
@@ -157,7 +157,7 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
   "mcp": {
     "deepseek-eyes": {
       "type": "local",
-      "command": ["C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
+      "command": ["C:\\path\\to\\deepseek-eyes-plus\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
       "enabled": true,
       "environment": {
         "VISION_API_KEY": "你的_API_Key"
@@ -171,12 +171,12 @@ DeepSeek V4 / GLM 等文本模型的 API **没有视觉能力** ——你粘贴�
 
 ```toml
 [mcp_servers.deepseek-eyes]
-command = 'C:\path\to\deepseek-eyes\.venv\Scripts\python.exe'
+command = 'C:\path\to\deepseek-eyes-plus\.venv\Scripts\python.exe'
 args = ["-m", "deepseek_eyes"]
 env = { "VISION_API_KEY" = "你的_API_Key" }
 ```
 
-或一行命令添加：`codex mcp add deepseek-eyes --env VISION_API_KEY=你的_API_Key -- C:\path\to\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes`
+或一行命令添加：`codex mcp add deepseek-eyes --env VISION_API_KEY=你的_API_Key -- C:\path\to\deepseek-eyes-plus\.venv\Scripts\python.exe -m deepseek_eyes`
 
 ### ❓ 常见问题
 

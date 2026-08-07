@@ -3,8 +3,8 @@
 ## 安装
 
 ```bash
-git clone https://github.com/ddjs0/deepseek-eyes.git
-cd deepseek-eyes
+git clone https://github.com/ddjs0/deepseek-eyes-plus.git
+cd deepseek-eyes-plus
 python -m venv .venv
 .venv\Scripts\activate    # Windows
 pip install -e .
@@ -23,7 +23,7 @@ pip install -e .
   "mcp": {
     "deepseek-eyes": {
       "type": "local",
-      "command": ["C:\\path\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
+      "command": ["C:\\path\\to\\deepseek-eyes-plus\\.venv\\Scripts\\python.exe", "-m", "deepseek_eyes"],
       "enabled": true,
       "environment": {
         "VISION_API_KEY": "your_key_here"

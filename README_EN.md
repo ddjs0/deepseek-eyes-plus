@@ -1,4 +1,4 @@
-# deepseek-eyes 👁️
+# deepseek-eyes-plus 👁️
 
 > Give DeepSeek the ability to see. Screenshot → clipboard → Qwen-VL → text → your text-only model can "see" images.
 
@@ -9,8 +9,8 @@
 ## Quick Start
 
 ```bash
-git clone https://github.com/ddjs0/deepseek-eyes.git
-cd deepseek-eyes
+git clone https://github.com/ddjs0/deepseek-eyes-plus.git
+cd deepseek-eyes-plus
 python -m venv .venv
 source .venv/bin/activate  # macOS/Linux
 # .venv\Scripts\activate   # Windows
@@ -29,7 +29,7 @@ pip install -e .
 
 Text-only models like **DeepSeek V4** and **GLM 5.1** have no vision capability. Paste a screenshot and they can't see it.
 
-**deepseek-eyes** bridges this gap — an MCP server that reads your clipboard image, sends it to a vision model (default Qwen-VL via ModelScope, or any OpenAI-compatible endpoint), and returns a text description your LLM can reason about.
+**deepseek-eyes-plus** bridges this gap — an MCP server that reads your clipboard image, sends it to a vision model (default Qwen-VL via ModelScope, or any OpenAI-compatible endpoint), and returns a text description your LLM can reason about.
 
 ## How It Works
 
@@ -37,7 +37,7 @@ Text-only models like **DeepSeek V4** and **GLM 5.1** have no vision capability.
 Claude Code / Opencode (DeepSeek API)
         │  MCP
         ▼
-deepseek-eyes (Python MCP Server)
+deepseek-eyes-plus (Python MCP Server)
         │
         ├── reads system clipboard (PIL)
         ├── encodes image as base64
@@ -73,7 +73,7 @@ deepseek-eyes (Python MCP Server)
 {
   "mcpServers": {
     "deepseek-eyes": {
-      "command": "ABSOLUTE_PATH\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe",
+      "command": "ABSOLUTE_PATH\\to\\deepseek-eyes-plus\\.venv\\Scripts\\python.exe",
       "args": ["-m", "deepseek_eyes"],
       "env": { "VISION_API_KEY": "your_key" }
     }
@@ -90,12 +90,12 @@ deepseek-eyes (Python MCP Server)
 
 ```toml
 [mcp_servers.deepseek-eyes]
-command = 'C:\path\to\deepseek-eyes\.venv\Scripts\python.exe'
+command = 'C:\path\to\deepseek-eyes-plus\.venv\Scripts\python.exe'
 args = ["-m", "deepseek_eyes"]
 env = { "VISION_API_KEY" = "your_key" }
 ```
 
-Or add it with one command: `codex mcp add deepseek-eyes --env VISION_API_KEY=your_key -- C:\path\to\deepseek-eyes\.venv\Scripts\python.exe -m deepseek_eyes`
+Or add it with one command: `codex mcp add deepseek-eyes --env VISION_API_KEY=your_key -- C:\path\to\deepseek-eyes-plus\.venv\Scripts\python.exe -m deepseek_eyes`
 
 ## Security
 

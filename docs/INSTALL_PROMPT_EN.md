@@ -1,11 +1,11 @@
 ﻿# AI Install Prompt (English)
 
-Copy-paste this into any AI coding assistant (DeepSeek, GLM, Claude, GPT, Gemini, ...) and it will set up `deepseek-eyes` for you end-to-end.
+Copy-paste this into any AI coding assistant (DeepSeek, GLM, Claude, GPT, Gemini, ...) and it will set up `deepseek-eyes-plus` for you end-to-end.
 
 ---
 
 ```
-Please help me install deepseek-eyes, an MCP server that adds vision
+Please help me install deepseek-eyes-plus, an MCP server that adds vision
 capabilities to text-only models (DeepSeek, GLM, etc.) by reading
 clipboard/files and analyzing them with a vision model (image/audio/video).
 
@@ -21,8 +21,8 @@ Prerequisite: **first read docs/VISION_MODELS.md in the repo** (common vision mo
    Continue based on my choice; do not decide for me.
 
 1. Clone the repo:
-   git clone https://github.com/ddjs0/deepseek-eyes.git
-   cd deepseek-eyes
+   git clone https://github.com/ddjs0/deepseek-eyes-plus.git
+   cd deepseek-eyes-plus
 
 2. Create venv and install:
    python -m venv .venv
@@ -50,7 +50,7 @@ Prerequisite: **first read docs/VISION_MODELS.md in the repo** (common vision mo
    {
      "mcpServers": {
        "deepseek-eyes": {
-         "command": "ABSOLUTE_PATH\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe",
+         "command": "ABSOLUTE_PATH\\to\\deepseek-eyes-plus\\.venv\\Scripts\\python.exe",
          "args": ["-m", "deepseek_eyes"],
          "env": {
            "VISION_API_KEY": "api_key_for_the_chosen_platform",

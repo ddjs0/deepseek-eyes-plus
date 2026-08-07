@@ -1,13 +1,13 @@
 ﻿# AI 安装提示词 / AI Install Prompt
 
-把下面的提示词直接粘贴给 Claude Code / DeepSeek / ChatGPT，让它帮你完成 deepseek-eyes 的安装和配置。
+把下面的提示词直接粘贴给 Claude Code / DeepSeek / ChatGPT，让它帮你完成 deepseek-eyes-plus 的安装和配置。
 
 ---
 
 ## 🇨🇳 中文（推荐）
 
 ```
-请帮我安装 deepseek-eyes，这是一个为 DeepSeek 等无视觉能力的模型
+请帮我安装 deepseek-eyes-plus，这是一个为 DeepSeek 等无视觉能力的模型
 提供图片/音频/视频理解能力的 MCP 服务器（剪贴板/文件媒体 → 视觉模型 → 文字描述）。
 
 安装步骤：
@@ -22,8 +22,8 @@
    根据我的选择继续，不要默认帮我决定。
 
 1. 克隆仓库：
-   git clone https://github.com/ddjs0/deepseek-eyes.git
-   cd deepseek-eyes
+   git clone https://github.com/ddjs0/deepseek-eyes-plus.git
+   cd deepseek-eyes-plus
 
 2. 创建虚拟环境并安装：
    python -m venv .venv
@@ -51,7 +51,7 @@
    {
      "mcpServers": {
        "deepseek-eyes": {
-         "command": "完整的deepseek-eyes目录路径\\.venv\\Scripts\\python.exe",
+         "command": "完整的deepseek-eyes-plus目录路径\\.venv\\Scripts\\python.exe",
          "args": ["-m", "deepseek_eyes"],
          "env": {
            "VISION_API_KEY": "所选模型平台的API Key",
@@ -90,7 +90,7 @@
 ## 🇬🇧 English
 
 ```
-Please help me install deepseek-eyes, an MCP server that adds vision
+Please help me install deepseek-eyes-plus, an MCP server that adds vision
 capabilities to text-only models (DeepSeek, GLM, etc.) by reading
 clipboard/files and analyzing them with a vision model (image/audio/video).
 
@@ -106,8 +106,8 @@ Prerequisite: **first read docs/VISION_MODELS.md in the repo** (common vision mo
    Continue based on my choice; do not decide for me.
 
 1. Clone the repo:
-   git clone https://github.com/ddjs0/deepseek-eyes.git
-   cd deepseek-eyes
+   git clone https://github.com/ddjs0/deepseek-eyes-plus.git
+   cd deepseek-eyes-plus
 
 2. Create venv and install:
    python -m venv .venv
@@ -135,7 +135,7 @@ Prerequisite: **first read docs/VISION_MODELS.md in the repo** (common vision mo
    {
      "mcpServers": {
        "deepseek-eyes": {
-         "command": "ABSOLUTE_PATH\\to\\deepseek-eyes\\.venv\\Scripts\\python.exe",
+         "command": "ABSOLUTE_PATH\\to\\deepseek-eyes-plus\\.venv\\Scripts\\python.exe",
          "args": ["-m", "deepseek_eyes"],
          "env": {
            "VISION_API_KEY": "api_key_for_the_chosen_platform",

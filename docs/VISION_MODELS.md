@@ -1,6 +1,6 @@
 ﻿# 常见视觉模型参考 / Common Vision Model Reference
 
-> deepseek-eyes 通过 **OpenAI 兼容接口**（`openai` SDK 的 `AsyncOpenAI` + `chat.completions.create`）调用视觉模型。
+> deepseek-eyes-plus 通过 **OpenAI 兼容接口**（`openai` SDK 的 `AsyncOpenAI` + `chat.completions.create`）调用视觉模型。
 > 接入任何平台只需在 MCP 客户端 env 里配三个变量：
 >
 > - `VISION_API_KEY`：所选平台的 API Key（旧名 `MODELSCOPE_API_KEY` 仍兼容，`VISION_API_KEY` 优先）
@@ -40,7 +40,7 @@
   VISION_MODEL = "mimo-v2.5"        # 或 mimo-v2.5-pro
   VISION_API_BASE = "https://api.xiaomimimo.com/v1"
   ```
-- **模态**：图片 / 音频 / 视频（全模态，deepseek-eyes 的音频、视频工具用它才能跑通）。
+- **模态**：图片 / 音频 / 视频（全模态，deepseek-eyes-plus 的音频、视频工具用它才能跑通）。
 - **费用**：按量计费（mimo-v2.5 约 ¥1/百万输入 token 量级，具体以平台为准）。
 - **注意**：音频格式限 `mp3/flac/m4a/wav/ogg`，视频格式限 `mp4/wmv/mov/avi`（平台错误信息里给出的支持列表）。
 
@@ -92,7 +92,7 @@
 - **模态**：**仅图片**。官方 OpenAI 兼容层明确不支持音频输入（会被忽略），`video_url` 也不在支持列表。
 - **鉴权**：直接把 Anthropic API Key 当 api_key 传（SDK 自动带 `Authorization: Bearer`），不需要 `x-api-key` 头。
 - **费用**：按量计费，以平台为准。
-- **注意**：Anthropic 官方说明该兼容层主要用于测试/对比模型能力，非长期生产方案；deepseek-eyes 的音频/视频工具切到 Claude 后不可用。
+- **注意**：Anthropic 官方说明该兼容层主要用于测试/对比模型能力，非长期生产方案；deepseek-eyes-plus 的音频/视频工具切到 Claude 后不可用。
 
 ## 其他平台
 
