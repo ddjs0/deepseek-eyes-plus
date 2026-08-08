@@ -177,7 +177,9 @@ class VisionClient:
                 }
             ],
             temperature=0.3,
-            max_tokens=2048,
+            # mimo-v2.5 等推理模型会把大量 token 花在 reasoning_content 上，
+            # 2048 会被思考吃光导致 content 为空返回空字符串；8192 实测充足
+            max_tokens=8192,
         )
         return response.choices[0].message.content or ""
 
